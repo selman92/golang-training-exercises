@@ -29,3 +29,8 @@ func main() {
 		fmt.Println("Ordered products:", o.Products)
 	}
 }
+
+type User struct {
+	Name   string
+	Orders []*Order
+}
