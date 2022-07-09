@@ -1,30 +1,41 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 )
 
 func main() {
-	files := listFiles("testdata")
+	listFilesFlag := flag.Bool("a", false, "List all flags: -a")
+	flag.Parse()
+
+	files := listFiles("testdata", listFilesFlag)
 
 	for _, file := range files {
 		fmt.Println(file)
 	}
 }
 
-func listFiles(dirname string) []string {
+func listFiles(dir string, listAllFiles *bool) []string {
 	var dirs []string
 
-	files, err := ioutil.ReadDir(dirname)
+	files, err := ioutil.ReadDir(dir)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, f := range files {
-		dirs = append(dirs, f.Name())
+		fileName := f.Name()
+
+		if *listAllFiles == false && strings.HasPrefix(fileName, ".") {
+			continue
+		}
+
+		dirs = append(dirs, fileName)
 	}
 
 	return dirs
